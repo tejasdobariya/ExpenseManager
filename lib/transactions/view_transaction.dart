@@ -1,23 +1,38 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_manager/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:expense_manager/screens/home_screen.dart';
-
+import '../model/details.dart';
 import '../model/user_model.dart';
 
-class AddTransaction extends StatefulWidget {
-  final int amount;
-  final String email,category;
-  const AddTransaction( {Key? key, required this.amount, required this.email, required this.category}) : super(key: key);
+class ViewTransaction extends StatefulWidget {
+  final Details tdetail;
+  ViewTransaction({ Key? key, required this.tdetail}) : super(key: key);
 
   @override
-  State<AddTransaction> createState() => _AddTransactionState(amount,email,category);
+  State<ViewTransaction> createState() => _ViewTransactionState(tdetail);
 }
 
-class _AddTransactionState extends State<AddTransaction> {
+class _ViewTransactionState extends State<ViewTransaction> {
+  int amount = 500;
+  String note = 'nt';
+  List<String> months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+  Details tdetail;
+  _ViewTransactionState(this.tdetail);
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
@@ -33,79 +48,28 @@ class _AddTransactionState extends State<AddTransaction> {
     });
   }
 
-  String txid(DateTime td)
-  {
-    String id="S";
-    id+=td.day.toString()+td.month.toString()+td.year.toString();
-    id+=td.second.toString();
-    return id;
-  }
-
-  int amount;
-  String email,category;
-  _AddTransactionState(this.amount,this.email,this.category);
-  String note = "";
-  String type = "Income";
-  DateTime selectedDate = DateTime.now();
-  String txnid ="" ;
-
-  TextEditingController amo = new TextEditingController();
-  TextEditingController nt = new TextEditingController();
-
-  List<String> months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec"
-  ];
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2021),
-        lastDate: DateTime(2100));
-
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("New Transaction"),
-          titleSpacing: 00.0,
-          centerTitle: true,
-          toolbarHeight: 60.2,
-          toolbarOpacity: 0.8,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(25),
-                bottomLeft: Radius.circular(25)),
+          title:Text(
+            "View Details",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 28.0,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          elevation: 0.00,
-          backgroundColor: Colors.red[400],
         ),
-
         backgroundColor: Color(0xffe2e7ef),
-
         body: ListView(
           padding: EdgeInsets.all(
             12.0,
           ),
           children: [
+            SizedBox(
+              height: 20.0,
+            ),
             Row(
               children: [
                 Container(
@@ -126,7 +90,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   width: 12.0,
                 ),
                 Text(
-                  amount.toString(),
+                  tdetail.amount.toString(),
                   style: TextStyle(fontSize: 25),
                 ),
               ],
@@ -154,7 +118,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   width: 12.0,
                 ),
                 Text(
-                  category,
+                  tdetail.category,
                   style: TextStyle(fontSize: 23),
                 ),
               ],
@@ -210,18 +174,9 @@ class _AddTransactionState extends State<AddTransaction> {
                   width: 12.0,
                 ),
                 Expanded(
-                  child: TextField(
-                    controller: nt,
-                    decoration: InputDecoration(
-                      hintText: "Note",
-                      border: InputBorder.none,
-                    ),
-                    style: TextStyle(
-                      fontSize: 23.0,
-                    ),
-                    onChanged: (val) {
-                      note = val;
-                    },
+                  child: Text(
+                    tdetail.note,
+                    style: TextStyle(fontSize: 23),
                   ),
                 ),
               ],
@@ -248,44 +203,12 @@ class _AddTransactionState extends State<AddTransaction> {
                 SizedBox(
                   width: 12.0,
                 ),
-                ChoiceChip(
-                  label: Text(
-                    "Income",
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: type == "Income" ? Colors.white : Colors.black,
-                    ),
-                  ),
-                  selectedColor: Colors.indigo,
-                  selected: type == "Income" ? true : false,
-                  onSelected: (val) {
-                    if (val) {
-                      setState(() {
-                        type = "Income";
-                      });
-                    }
-                  },
+                Text(
+                  tdetail.type,
+                  style: TextStyle(fontSize: 23),
                 ),
                 SizedBox(
                   width: 12.0,
-                ),
-                ChoiceChip(
-                  label: Text(
-                    "Expense",
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: type == "Expense" ? Colors.white : Colors.black,
-                    ),
-                  ),
-                  selectedColor: Colors.indigo,
-                  selected: type == "Expense" ? true : false,
-                  onSelected: (val) {
-                    if (val) {
-                      setState(() {
-                        type = "Expense";
-                      });
-                    }
-                  },
                 ),
               ],
             ),
@@ -295,9 +218,7 @@ class _AddTransactionState extends State<AddTransaction> {
             SizedBox(
               height: 50.0,
               child: TextButton(
-                  onPressed: () {
-                    _selectDate(context);
-                  },
+                  onPressed: () {},
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all(
                       EdgeInsets.zero,
@@ -325,10 +246,10 @@ class _AddTransactionState extends State<AddTransaction> {
                         width: 12.0,
                       ),
                       Text(
-                        "${selectedDate.day} ${months[selectedDate.month - 1]}",
+                        // tdetail.selectedDate.toString(),
+                        "${tdetail.selectedDate.day} ${months[tdetail.selectedDate.month - 1]}",
                         style: TextStyle(
                           fontSize: 20.0,
-                          color: Colors.black54,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -341,42 +262,11 @@ class _AddTransactionState extends State<AddTransaction> {
             SizedBox(
               height: 50.0,
               child: ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        )
-                    )
-                ),
                 onPressed: () {
                   if (amount != null && note.isNotEmpty) {
-                    txnid = txid(selectedDate);
-                    print(txnid);
-                    print(amount);
-                    print(note);
-                    final docUser =
-                        FirebaseFirestore.instance.collection('expenses').doc();
+                    print("delete");
+                    FirebaseFirestore.instance.collection("expenses").doc(tdetail.id).delete();
 
-
-                    print(docUser.id);
-                    print(loggedInUser.email);
-                    print(loggedInUser.uid);
-                    print(loggedInUser.firstName);
-                    Map<String, dynamic> data = {
-                      "id": loggedInUser.uid,
-                      "amount": amount,
-                      "category": category,
-                      "date": selectedDate,
-                      "email": loggedInUser.email,
-                      "note": nt.text,
-                      "txnid": txnid,
-                      "type": type,
-                      "account":"cash"
-                    };
-                    docUser.set(data);
-
-                    // add transaction details to db code
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -384,11 +274,11 @@ class _AddTransactionState extends State<AddTransaction> {
                       ),
                     );
                   } else {
-                    print("Not all values provided!");
+                    print("Something is wrong!!");
                   }
                 },
                 child: Text(
-                  "Add",
+                  "Delete ",
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w600,

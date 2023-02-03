@@ -1,3 +1,4 @@
+import 'package:expense_manager/transactions/enter_amount.dart';
 import 'package:flutter/material.dart';
 
 import 'add_transaction.dart';
@@ -33,7 +34,7 @@ class SelectCategory extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  AddTransaction(text: 'Food', email: email),
+                                  EnterAmount(text: 'Food', email: email),
                             ),
                           )
                         },
@@ -47,7 +48,7 @@ class SelectCategory extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddTransaction(
+                              builder: (context) => EnterAmount(
                                   text: "Shopping", email: email),
                             ),
                           )
@@ -63,7 +64,7 @@ class SelectCategory extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  AddTransaction(text: "Medical", email: email),
+                                  EnterAmount(text: "Medical", email: email),
                             ),
                           )
                         },
@@ -86,7 +87,7 @@ class SelectCategory extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  AddTransaction(text: "Kids", email: email),
+                                  EnterAmount(text: "Kids", email: email),
                             ),
                           )
                         },
@@ -100,7 +101,7 @@ class SelectCategory extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddTransaction(
+                              builder: (context) => EnterAmount(
                                   text: "Entertainment", email: email),
                             ),
                           )
@@ -116,7 +117,7 @@ class SelectCategory extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  AddTransaction(text: "Vehicle", email: email),
+                                  EnterAmount(text: "Vehicle", email: email),
                             ),
                           )
                         },
@@ -139,7 +140,7 @@ class SelectCategory extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  AddTransaction(text: "Housing", email: email),
+                                  EnterAmount(text: "Housing", email: email),
                             ),
                           )
                         },
@@ -153,7 +154,7 @@ class SelectCategory extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddTransaction(
+                              builder: (context) => EnterAmount(
                                   text: "Groceries", email: email),
                             ),
                           )
@@ -169,7 +170,7 @@ class SelectCategory extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  AddTransaction(text: "General", email: email),
+                                  EnterAmount(text: "General", email: email),
                             ),
                           )
                         },
@@ -191,7 +192,7 @@ class SelectCategory extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              AddTransaction(text: "Bills", email: email),
+                              EnterAmount(text: "Bills", email: email),
                         ),
                       )
                     },
@@ -206,7 +207,7 @@ class SelectCategory extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              AddTransaction(text: "Investment", email: email),
+                              EnterAmount(text: "Investment", email: email),
                         ),
                       )
                     },
@@ -221,7 +222,7 @@ class SelectCategory extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              AddTransaction(text: "Education", email: email),
+                              EnterAmount(text: "Education", email: email),
                         ),
                       )
                     },
