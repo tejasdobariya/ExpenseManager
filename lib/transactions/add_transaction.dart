@@ -358,13 +358,12 @@ class _AddTransactionState extends State<AddTransaction> {
                     final docUser =
                         FirebaseFirestore.instance.collection('expenses').doc();
 
-
-                    print(docUser.id);
-                    print(loggedInUser.email);
-                    print(loggedInUser.uid);
-                    print(loggedInUser.firstName);
+                    // print(docUser.id);
+                    // print(loggedInUser.email);
+                    // print(loggedInUser.uid);
+                    // print(loggedInUser.firstName);
                     Map<String, dynamic> data = {
-                      "id": loggedInUser.uid,
+                      "userid": loggedInUser.uid,
                       "amount": amount,
                       "category": category,
                       "date": selectedDate,
@@ -372,7 +371,9 @@ class _AddTransactionState extends State<AddTransaction> {
                       "note": nt.text,
                       "txnid": txnid,
                       "type": type,
-                      "account":"cash"
+                      "account":"cash",
+                      "id":docUser.id
+
                     };
                     docUser.set(data);
 

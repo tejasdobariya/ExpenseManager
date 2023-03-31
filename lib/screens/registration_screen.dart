@@ -14,7 +14,6 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-
   final _auth = FirebaseAuth.instance;
 
   // our form key
@@ -24,6 +23,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final firstNameEditingController = new TextEditingController();
   final secondNameEditingController = new TextEditingController();
   final emailEditingController = new TextEditingController();
+  final mobileController = new TextEditingController();
   final passwordEditingController = new TextEditingController();
   final confirmPasswordEditingController = new TextEditingController();
 
@@ -110,6 +110,34 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
         ));
 
+    //mobile field
+    final mobileField = TextFormField(
+        autofocus: false,
+        controller: mobileController,
+        keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value!.isEmpty) {
+            return ("Please Enter Mobile number");
+          }
+          // reg expression for email validation
+          if (!RegExp(r'\d{10}').hasMatch(value)) {
+            return ("Please Enter a valid Mobile number");
+          }
+          return null;
+        },
+        onSaved: (value) {
+          firstNameEditingController.text = value!;
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          prefixIcon: Icon(Icons.phone_android),
+          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "Mobile",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ));
+
     //password field
     final passwordField = TextFormField(
         autofocus: false,
@@ -169,10 +197,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       color: Colors.redAccent,
       child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          minWidth: MediaQuery
-              .of(context)
-              .size
-              .width,
+          minWidth: MediaQuery.of(context).size.width,
           onPressed: () {
             signUp(emailEditingController.text, passwordEditingController.text);
           },
@@ -183,7 +208,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
           )),
     );
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -223,12 +247,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(height: 20),
                     emailField,
                     SizedBox(height: 20),
+                    mobileField,
+                    SizedBox(height: 20),
                     passwordField,
                     SizedBox(height: 20),
                     confirmPasswordField,
                     SizedBox(height: 20),
                     signUpButton,
-
                   ],
                 ),
               ),
@@ -241,15 +266,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void signUp(String email, String password) async {
     if (_formKey.currentState!.validate()) {
-        await _auth
-            .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToFirestore()})
-            .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
-        });
-      }
-      }
-
+      await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) => {postDetailsToFirestore()})
+          .catchError((e) {
+        Fluttertoast.showToast(msg: e!.message);
+      });
+    }
+  }
 
   postDetailsToFirestore() async {
     // calling our firestore
@@ -266,6 +290,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     userModel.uid = user.uid;
     userModel.firstName = firstNameEditingController.text;
     userModel.secondName = secondNameEditingController.text;
+    userModel.mobile = mobileController.text;
 
     await firebaseFirestore
         .collection("users")
@@ -273,9 +298,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         .set(userModel.toMap());
     Fluttertoast.showToast(msg: "Account created successfully :) ");
 
+    final docUser = FirebaseFirestore.instance.collection('limits').doc();
+    Map<String, dynamic> data = {
+      'email':userModel.email,
+      'uid':userModel.uid,
+      'food' : 0,
+      'shopping': 0,
+      'medical': 0,
+      'kids': 0,
+      'entertainment': 0,
+      'vehicle': 0,
+      'housing': 0,
+      'groceries': 0,
+      'general': 0,
+      'bills': 0,
+      'investment': 0,
+      'education': 0,
+      'id':docUser.id
+    };
+    docUser.set(data);
+
     Navigator.pushAndRemoveUntil(
         (context),
         MaterialPageRoute(builder: (context) => HomeScreen()),
-            (route) => false);
+        (route) => false);
   }
 }
