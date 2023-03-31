@@ -21,7 +21,7 @@ class _UserInformationState extends State<UserInformation> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Profile"),
+          title: Text("Profile11"),
           actions: <Widget>[
             IconButton(
               icon: Icon(
