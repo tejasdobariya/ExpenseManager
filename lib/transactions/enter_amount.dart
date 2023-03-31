@@ -57,13 +57,13 @@ class _EnterAmountState extends State<EnterAmount> {
         child: Column(
           children: [
             Container(
-              color: Colors.blue,
+              color: Colors.red[200],
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Column(children: <Widget>[
                     SizedBox(
-                      height: 12.0,
+                      height: 18.0,
                     ),
                     Text(
                       'Category',
